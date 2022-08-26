@@ -1,6 +1,6 @@
 package sensitive
 
-import "sensitive/handle"
+import "github.com/lixh00/sensitive/handle"
 
 // RuleHandler 脱敏规则处理接口
 type RuleHandler func(src, placeholder string) (dst string)
