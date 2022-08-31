@@ -19,30 +19,32 @@ type User struct {
     Name string `json:"name"`
     Age int `json:"age"`
     Phone string `json:"phone" sen:"phone,*"`
-	Email string `json:"email" sen:"email,*"`
+    Email string `json:"email" sen:"email,*"`
 }
 
-data :=  User{
-    Name: "lixh",
-    Age: 18,
-	Phone: "13888888888",
-	Email: "lixh@gmail.com",
+func main() {
+    data :=  User{
+        Name: "lixh",
+        Age: 18,
+        Phone: "13888888888",
+        Email: "lixh@gmail.com",
+    }
+
+    // 添加自定义处理函数
+    // Add custom handler
+    sensitive.AddHandler("email", func(src, p string) string {
+        // 将@符号后面的替换为*
+        // Replace the after @ sign with *
+        idx := strings.Index(src, "@")
+        dst := src[:idx+1] + strings.Repeat(p, utf8.RuneCountInString(src)-idx-1)
+        
+        return dst
+    })
+    
+    if err := sensitive.Desensitize(data); err != nil {
+        fmt.Println(err)
+    }
+    bs, _ := json.Marshal(response)
+    log.Printf("after processing data: %v", string(bs))
 }
-
-// 添加自定义处理函数
-// Add custom handler
-sensitive.AddHandler("email", func(src, p string) string {
-	// 将@符号后面的替换为*
-	// Replace the after @ sign with *
-	idx := strings.Index(src, "@")
-	dst := src[:idx+1] + strings.Repeat(p, utf8.RuneCountInString(src)-idx-1)
-
-	return dst
-})
-
-if err := sensitive.Desensitize(data); err != nil {
-    fmt.Println(err)
-}
-bs, _ := json.Marshal(response)
-log.Printf("after processing data: %v", string(bs))
 ```
