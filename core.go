@@ -52,7 +52,7 @@ func Desensitization(r any, skip bool) (err error) {
 
 			//log.Printf("类型: %v -> %v 值: %v 脱敏标签是否存在: %v", f.Type(), f.Kind(), f.Interface(), tag != "")
 			// 如果是结构体，递归调用
-			if f.Kind() == reflect.Interface {
+			if f.Kind() == reflect.Interface || f.Kind() == reflect.Struct || f.Kind() == reflect.Slice || f.Kind() == reflect.Array {
 				//log.Println("开始处理子级")
 				err = Desensitization(f.Interface(), skip)
 			}
